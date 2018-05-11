@@ -1,0 +1,230 @@
+<!DOCTYPE>
+<html ng-app="myApp">
+<head>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <title>Notebooks & Contact</title>
+</head>
+<body ng-controller="AppController">
+
+<!-- Navigation toolbar -->
+<nav class="navbar navbar-default">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#"><p>Contact List App</p></a>
+            
+             <button class="btn btn-danger" id="logout" >
+                 LogOut
+            </button>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
+<div id="welcome">
+
+</div>
+<div class="container">
+    <form class="navbar-form navbar-right" id="addmainIDr">
+                <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#newUserModal" >New
+                    contact
+                </button>
+            </form>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Number</th>
+            <th>Job</th>
+            <th>Location</th>
+
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Print all the contacts from the database -->
+        <tr id="LastEdit">
+              <form name="myForm" novalidate>
+            <td>   <div class="form-group">
+                        
+                        <input class="form-control" ng-model="contact.name" id="contact-name" placeholder="first name"
+                               required data-validation-required-message="Please fill with your name.">
+                    </div></td>
+            <td>     <div class="form-group">
+                        
+                        <input class="form-control" ng-model="contact.number" id="contact-number" placeholder="Phone"
+                               minlength="10" required>
+                    </div></td>
+            <td> 
+                 <div class="form-group">
+                        
+                        <input class="form-control" ng-model="contact.job" id="contact-job" placeholder="job title">
+                    </div>
+            </td>
+            <td> 
+                 <div class="form-group">
+                       
+                        <input class="form-control" ng-model="contact.location" id="contact-location" placeholder="location">
+                    </div>
+            </td>
+            <td>
+                 <div class="modal-footer" >
+                <button class="btn btn-primary" ng-click="update()" data-dismiss="modal" ng-disabled="myForm.$invalid">
+                    Edit 
+                </button>
+                <button class="btn btn-success" ng-click="addContact()" data-dismiss="modal"
+                        ng-disabled="myForm.$invalid">Add 
+                </button>
+            </div>
+            </td>
+        </tr>
+        <tr ng-repeat="contact in contactlist">
+            <td>{{contact.name}}</td>
+            <td>{{contact.number}}</td>
+            <td>{{contact.job}}</td>
+            <td>{{contact.location}}</td>
+
+            <td id="authUser">
+                <button class="btn btn-danger" ng-click="remove(contact._id)">Remove</button>&nbsp;<button
+                    class="btn btn-warning" ng-click="edit(contact._id)" data-toggle="modal"
+                   >Edit
+             </button>
+            </td>
+            
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- New User Modal -->
+<div class="modal fade" id="newUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Add profile</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" novalidate>
+                    <div class="form-group">
+                        <label for="contact-name">Contact Name</label>
+                        <input class="form-control" ng-model="contact.name" id="contact-name" placeholder="name"
+                               required data-validation-required-message="Please fill with your name.">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-number">Contact Phone Number</label>
+                        <input class="form-control" ng-model="contact.number" id="contact-number" placeholder="Phone"
+                               minlength="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-typephone">Job</label>
+                        <input class="form-control" ng-model="contact.job" id="contact-job" placeholder="job title">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-typephone">Location</label>
+                        <input class="form-control" ng-model="contact.location" id="contact-location" placeholder="location">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" ng-click="addContact()" data-dismiss="modal"
+                        ng-disabled="myForm.$invalid">Add Contact
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit User Modal -->
+<div class="modal fade" id="editUserModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="modalLabel">Editing {{contact.name}} profile</h4>
+            </div>
+            <div class="modal-body">
+                <form name="myForm" novalidate>
+                    <div class="form-group">
+                        <label for="contact-name">Contact Name</label>
+                        <input class="form-control" ng-model="contact.name" id="contact-name" placeholder="first name"
+                               required data-validation-required-message="Please fill with your name.">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-number">Contact Phone Number</label>
+                        <input class="form-control" ng-model="contact.number" id="contact-number" placeholder="Phone"
+                               minlength="10" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="contact-typephone">Job</label>
+                        <input class="form-control" ng-model="contact.job" id="contact-job" placeholder="job title">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact-address">Contact Address</label>
+                        <input class="form-control" ng-model="contact.location" id="contact-address"
+                               placeholder="address">
+                    </div>
+                    
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" ng-click="update()" data-dismiss="modal" ng-disabled="myForm.$invalid">
+                    Edit Contact
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery Library -->
+<script src="assist/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        if (localStorage.getItem("username") === null){
+            document.getElementById("authUser").innerHTML = "";
+            document.getElementById("addmainIDr").innerHTML = "";//
+            document.getElementById("LastEdit").innerHTML = "";
+            $("#welcome").append('<div class="alert alert-danger">Welcome</div>');
+
+        }
+        else{
+            $("#welcome").append('<div class="alert alert-success">Welcome '+localStorage.getItem("username")+'</div>');
+
+        }
+        // aagit commit -m "First commit"
+        $("#logout").click(function(){
+            localStorage.clear();
+            window.location.href = window.location.href;
+        });
+
+    });
+
+</script>
+
+<script src="css/jquery.min.js"></script>
+
+<script src="css/bootstrap.min.js"></script>
+
+<script src="css/angular.min.js"></script>
+
+
+<script src="controllers/controller.js"></script>
+</body>
+</html>
