@@ -4,7 +4,7 @@ var app = express();
 
 
 var mongojs = require('mongojs');
-var emdb = mongojs('[emandatabass]', ['contactlist']);
+var emdb = mongojs('mongodb://em:em@ds121730.mlab.com:21730/emandatabase', ['contactlist']);
 
 var bodyParser = require('body-parser');
 
